@@ -1,8 +1,7 @@
 # Intro
-This will be the more complex version of the raytracing project. It will support multiple types of 3D object formats.
-There is a GUI where a file is chosen from the File Explorer instead of fixing the code directly. 
-Instead of .ppm the output will be converted to .png by using stb_image. 
-The software is made in VSCode with c++ 20 .
+This will be the more complex version of the raytracing project.
+The software is made in VSCode with c++ 20.
+Development continues
 
 # Features
 - Real-time ray tracing engine
