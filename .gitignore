@@ -1,0 +1,19 @@
+﻿# Build artifacts
+build/
+*.exe
+*.dll
+*.obj
+*.a
+*.lib
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Output files
+output.png
+output.ppm
+
+# Editor files
+.vs/
+.idea/
