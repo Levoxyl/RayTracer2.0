@@ -1,10 +1,12 @@
-// include/raytracer.h
 #pragma once
 #include <vector>
 #include <string>
 #include <functional>
+#include <algorithm>  // Add for std::clamp
 #include "triangle.h"
 #include "ray.h"
+#include "vector3.h"  // Add this
+#include "material.h"  // Add this
 
 #ifdef _WIN32
     #ifdef RAYTRACER_EXPORTS
@@ -15,6 +17,14 @@
 #else
     #define RAYTRACER_API
 #endif
+
+// Add this struct
+struct HitRecord {
+    float t;
+    Vector3 point;
+    Vector3 normal;
+    Material material;
+};
 
 class RAYTRACER_API Raytracer {
 public:
@@ -29,11 +39,11 @@ public:
     
 private:
     std::vector<Triangle> triangles;
-    Vector3 cameraPosition = Vector3(0, 1.5, 4);
+    Vector3 cameraPosition;
     
     // Core rendering functions
+     bool intersectTriangle(const Triangle& tri, const Ray& ray, HitRecord& hit);
     Vector3 trace(const Ray& ray, int depth = 0);
-    bool intersectTriangle(const Triangle& tri, const Ray& ray, struct HitRecord& hit);
     
     // Scene setup
     void addDefaultScene();
