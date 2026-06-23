@@ -1,4 +1,3 @@
-// raytracer.cpp
 #include "raytracer.h"
 #include <algorithm>  // For std::max and std::clamp
 #include <cmath>      // For pow and sqrt
