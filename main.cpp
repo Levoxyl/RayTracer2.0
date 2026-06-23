@@ -1,4 +1,3 @@
-// main.cpp
 #include "raytracer.h"
 #include <iostream>
 #include <vector>

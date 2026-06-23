@@ -10,7 +10,7 @@ execute_process(
 get_filename_component(MINGW_PATH "${MINGW_PATH}" DIRECTORY)
 message(STATUS "Found MinGW at: ${MINGW_PATH}")
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20 CACHE STRING "Force C++ Version" FORCE)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(include)
