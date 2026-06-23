@@ -1,15 +1,8 @@
+# Metadata
 cmake_minimum_required(VERSION 3.15)
 project(RayTracer)
 
-# Find MinGW path automatically
-execute_process(
-    COMMAND where gcc
-    OUTPUT_VARIABLE MINGW_PATH
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-get_filename_component(MINGW_PATH "${MINGW_PATH}" DIRECTORY)
-message(STATUS "Found MinGW at: ${MINGW_PATH}")
-
+# C++ version
 set(CMAKE_CXX_STANDARD 20 CACHE STRING "Force C++ Version" FORCE)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -22,6 +15,10 @@ add_library(RaytracerCore SHARED
     core/raytracer.cpp
     core/triangle.cpp 
 )
+
+# MSVC dependency path
+
+target_compile_definitions(RaytracerCore PRIVATE RAYTRACER_EXPORTS)
 
 # Only copy DLLs on Windows
 if(WIN32)
