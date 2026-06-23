@@ -12,14 +12,11 @@ from PyQt6.QtCore import Qt
 
 # Add the verify_dlls function here (before the MainWindow class)
 def verify_dlls():
-    build_dir = Path(__file__).parent.parent / "build"
+    build_dir = Path(__file__).parent.parent / "out" / "build" / "x64-Debug"
     required = [
-        "libRaytracerCore.dll",
-        "libgcc_s_seh-1.dll",
-        "libstdc++-6.dll",
-        "libwinpthread-1.dll"
+        "RaytracerCore.dll"
     ]
-    
+
     print("Verifying DLLs in:", build_dir)
     all_ok = True
     
@@ -100,8 +97,8 @@ class MainWindow(QMainWindow):
         self.current_pixmap = None
         
     def load_dll(self):
-        build_dir = Path(__file__).parent.parent / "build"
-        dll_path = build_dir / "libRaytracerCore.dll"
+        build_dir = Path(__file__).parent.parent / "out" / "build" / "x64-Debug"
+        dll_path = build_dir / "RaytracerCore.dll"
         
         # Verify dependencies first
         if not verify_dlls():  # Reuse the verification function
