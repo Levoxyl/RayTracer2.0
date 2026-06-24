@@ -18,7 +18,7 @@ void Raytracer::render(int width, int height,
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             float u = (x + 0.5f) / width;
-            float v = (y + 0.5f) / height;
+            float v = 1.0f - ((y + 0.5f) / height);
              
             Ray ray = camera.generateRay(u, v);
             Vector3 color = trace(ray);

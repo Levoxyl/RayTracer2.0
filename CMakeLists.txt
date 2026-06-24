@@ -14,6 +14,8 @@ add_library(RaytracerCore SHARED
     core/interface.cpp
     core/raytracer.cpp
     core/triangle.cpp 
+    core/parser.cpp
+    include/parser.h
 )
 
 target_compile_definitions(RaytracerCore PRIVATE RAYTRACER_EXPORTS)
