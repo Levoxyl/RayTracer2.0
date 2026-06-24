@@ -24,14 +24,35 @@ std::vector<Triangle> Parser::loadModel(const std::string& path, const Material&
         }
         else if (prefix == "f") {
             int idx0, idx1, idx2;
-            ss >> idx0 >> idx1 >> idx2;
+            char discard;
 
-            // Convert OBJ 1-based indexing to C++ 0-based indexing
-            Vector3 v0 = vertices[idx0 - 1];
-            Vector3 v1 = vertices[idx1 - 1];
-            Vector3 v2 = vertices[idx2 - 1];
+            ss >> idx0;
+            if (ss.peek() == '/') {
+                ss >> discard;
+                if (ss.peek() != '/') { int trash; ss >> trash; }
+                if (ss.peek() == '/') { ss >> discard; int trash; ss >> trash; }
+            }
 
-            triangles.push_back(Triangle(v0, v1, v2, mat));
+
+            ss >> idx1;
+            if (ss.peek() == '/') {
+                ss >> discard;
+                if (ss.peek() != '/') { int trash; ss >> trash; }
+                if (ss.peek() == '/') { ss >> discard; int trash; ss >> trash; }
+            }
+
+            ss >> idx2;
+            if (ss.peek() == '/') {
+                ss >> discard;
+                if (ss.peek() != '/') { int trash; ss >> trash; }
+                if (ss.peek() == '/') { ss >> discard; int trash; ss >> trash; }
+            }
+
+                Vector3 v0 = vertices[idx0 - 1];
+                Vector3 v1 = vertices[idx1 - 1];
+                Vector3 v2 = vertices[idx2 - 1];
+
+                triangles.push_back(Triangle(v0, v1, v2, mat)); 
         }
     }
 

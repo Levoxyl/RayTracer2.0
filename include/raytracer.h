@@ -20,6 +20,8 @@
 #endif
 
 struct HitRecord {
+    HitRecord() : t(-1.f), point(),normal(),material() {}
+
     float t;
     Vector3 point;
     Vector3 normal;

@@ -1,4 +1,5 @@
 #include "raytracer.h"
+#include "parser.h"
 #include <algorithm>
 #include <cmath>
 #include <limits>   
@@ -8,7 +9,15 @@ Raytracer::Raytracer() {
 }
 
 void Raytracer::loadModel(const std::string& path) {
-    addDefaultScene();
+     triangles.clear();
+
+     Material modelMat;
+     modelMat.albedo = Vector3(.0f, 1.f, .0f);
+     modelMat.specular = .5f;
+     modelMat.shininess = 32.f;
+     
+     triangles = Parser::loadModel(path, modelMat);
+
 }
 
 void Raytracer::render(int width, int height,
@@ -94,10 +103,10 @@ void Raytracer::addDefaultScene() {
 }
 
 Vector3 Raytracer::trace(const Ray& ray, int depth) {
-    HitRecord hit;
+    HitRecord hit{};
     bool hitAnything = false;
     float closest = std::numeric_limits<float>::max();
-    HitRecord closestHit;
+    HitRecord closestHit{};
     
     for (const Triangle& tri : triangles) {
         if (intersectTriangle(tri, ray, hit)) {
