@@ -10,7 +10,6 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt
 
-# Add the verify_dlls function here (before the MainWindow class)
 def verify_dlls():
     build_dir = Path(__file__).parent.parent / "out" / "build" / "x64-Debug"
     required = [
@@ -91,7 +90,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(container)
         
         # Load DLL
-        self.raytracer = self.load_dll()
+        self.raytracer = self.load_dll() #direct c++ func call 
         
         # Store current pixmap for resize handling
         self.current_pixmap = None
@@ -101,21 +100,21 @@ class MainWindow(QMainWindow):
         dll_path = build_dir / "RaytracerCore.dll"
         
         # Verify dependencies first
-        if not verify_dlls():  # Reuse the verification function
+        if not verify_dlls():
             return None
             
         try:
             # Windows-specific loading
             if os.name == 'nt':
                 os.add_dll_directory(str(build_dir))
-                os.add_dll_directory("C:\\mingw64\\bin")
+                os.add_dll_directory("C:\\mingw64\\bin") #still mingw?
                 
             raytracer = ctypes.CDLL(str(dll_path))
             raytracer.render_image.argtypes = [
                 ctypes.c_char_p, 
                 ctypes.c_char_p,
                 ctypes.c_int,
-                ctypes.c_int
+                ctypes.c_int             
             ]
             return raytracer
         except Exception as e:
@@ -142,7 +141,7 @@ class MainWindow(QMainWindow):
         )
         if path:
             if not path.lower().endswith('.png'):
-                path += '.png'
+                path += '.png'          # safety net
             self.output_path.setText(path)
     
     def render_image(self):
@@ -157,7 +156,7 @@ class MainWindow(QMainWindow):
             # Call C++ renderer
             self.raytracer.render_image(
                 self.model_path.text().encode('utf-8'),
-                self.output_path.text().encode('utf-8'),
+                self.output_path.text().encode('utf-8'), # why *2 x2 ?
                 800, 
                 600
             )
@@ -168,7 +167,7 @@ class MainWindow(QMainWindow):
         
         # Display result
         if os.path.exists(self.output_path.text()):
-            self.current_pixmap = QPixmap(self.output_path.text())
+            self.current_pixmap = QPixmap(self.output_path.text()) #whats pixmap?
             if not self.current_pixmap.isNull():
                 self.update_image_display()
             else:
@@ -177,9 +176,9 @@ class MainWindow(QMainWindow):
             print(f"Output image not found at {self.output_path.text()}")
     
     def update_image_display(self):
-        """Update image display with proper scaling"""
-        if not self.current_pixmap or self.current_pixmap.isNull():
-            return
+        """Update image display with proper scaling""" #why the 3 double quotes?
+        if not self.current_pixmap or self.current_pixmap.isNull(): 
+            return 
             
         # Get available space in scroll area
         available_width = self.scroll_area.viewport().width()

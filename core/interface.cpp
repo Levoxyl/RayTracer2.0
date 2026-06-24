@@ -13,7 +13,13 @@ void save_image(const char* filename, const std::vector<float>& pixels, int w, i
     stbi_write_png(filename, w, h, 3, byte_pixels.data(), w * 3);
 }
 
-extern "C" __declspec(dllexport) void render_image(const char* filepath, const char* output_path, int width, int height) {
+// An MS compiler directive that connects with Python 
+
+extern "C" __declspec(dllexport) void render_image(const char* filepath,
+                                                    const char* output_path,
+                                                    int width,
+                                                    int height) {
+
     std::vector<float> pixels(width * height * 3, 0.0f);
     
     Raytracer r;
