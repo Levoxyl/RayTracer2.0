@@ -31,8 +31,48 @@ void Raytracer::render(int width, int height,
     }
 }
 
-bool Raytracer::intersectTriangle(const Triangle& tri, const Ray& ray, HitRecord& hit) {
-    return false;
+bool Raytracer::intersectTriangle(const Triangle& tri,
+                                        const Ray& ray,
+                                        HitRecord& hit) {
+                                                            // Create traingle arrows
+                                                            // Arrows != Vectors
+                                                            // Arrows are a displacement
+                                                            // Vectors are points 
+    Vector3 edge1 = tri.v1 - tri.v0;                        // But an arrow                                                     // The - is not                            
+    Vector3 edge2 = tri.v2 - tri.v0;                        // [point] <- [source]
+                      
+    Vector3 pvec = Vector3::cross(ray.direction, edge2);    // The Parallel Check
+    float det = Vector3::dot(edge1, pvec);
+                                                           
+    if (fabs(det) < 0.000001f) {                            // True: Ray is parallel to the triangle plane                                                    
+        return false;                                       // fabs = floating point absolute value
+    }
+
+    float invDet = 1.0f / det;
+                               
+    Vector3 tvec = ray.origin - tri.v0;                     // Barycentric Coordinates (u and v)
+    float u = Vector3::dot(tvec, pvec) * invDet;            // tvec = translation vector
+    if (u < 0.0f || u > 1.0f) {
+        return false;                                       // Point falls outside the first edge boundary
+    }
+
+    Vector3 qvec = Vector3::cross(tvec, edge1);
+    float v = Vector3::dot(ray.direction, qvec) * invDet;
+    if (v < 0.0f || u + v > 1.0f) {
+        return false;                                       // Point falls outside the diagonal boundary
+    }
+                                                            
+    float t = Vector3::dot(edge2, qvec) * invDet;           // Distance (t)
+    if (t < 0.0001f) {
+        return false;                                       // Triangle is behind the camera
+    }
+                                                            // Update Hit
+    hit.t = t;
+    hit.point = ray.pointAt(t);
+    hit.normal = tri.normal;
+    hit.material = tri.material;
+
+    return true;
 }
 
 void Raytracer::addDefaultScene() {
