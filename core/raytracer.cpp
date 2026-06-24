@@ -78,8 +78,8 @@ Vector3 Raytracer::trace(const Ray& ray, int depth) {
     
     // SPECULAR HIGHLIGHTS - ONLY ONE VERSION!
     Vector3 viewDir = Vector3::normalize(-ray.direction);
-    Vector3 reflectDir = Vector3::reflect(-lightDir, normal);  // REMOVE THE OTHER DECLARATION
-    float spec = pow(  // REMOVE THE OTHER DECLARATION
+    Vector3 reflectDir = Vector3::reflect(-lightDir, normal);
+    float spec = pow(
         std::max(0.0f, Vector3::dot(reflectDir, viewDir)), 
         closestHit.material.shininess
     );
