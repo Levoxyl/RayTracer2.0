@@ -76,6 +76,20 @@ bool Raytracer::intersectTriangle(const Triangle& tri,
 }
 
 void Raytracer::addDefaultScene() {
+    triangles.clear();
+
+    Material testMat;
+    testMat.albedo = Vector3(0.8f, .2f, .2f);
+    testMat.specular = .5f;
+    testMat.shininess = 32.0f;
+
+    Vector3 vertex0(-1.0f, -.5f, 0.0f);
+    Vector3 vertex1(1.f, -.5f, .0f);
+    Vector3 vertex2(.0f, 1.f, .0f);
+
+    Triangle testTriangle(vertex0, vertex1, vertex2, testMat);
+
+    triangles.push_back(testTriangle);
 
 }
 
