@@ -20,7 +20,7 @@ void Raytracer::render(int width, int height,
             float u = (x + 0.5f) / width;
             float v = (y + 0.5f) / height;
              
-            Ray ray(cameraPosition, Vector3(u, v, -1.0f));
+            Ray ray = camera.generateRay(u, v);
             Vector3 color = trace(ray);
 
             pixelCallback(x, y, color.x, color.y, color.z);
