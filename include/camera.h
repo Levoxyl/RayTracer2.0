@@ -9,7 +9,11 @@ struct Camera {
     float fov;
     float aspectRatio;
     
-    Camera() : position(0, 1.5, 4), lookAt(0, 0, 0), up(0, 1, 0), fov(45), aspectRatio(1.33f) {}
+    Camera() : position(-1.0f, -0.5f, 0.0f),
+                lookAt(1.0f, -0.5f, 0.0f),
+                up(0.0f, 1.0f, 0.0f),
+                fov(45),
+                aspectRatio(1.33f) {}
     
     Ray generateRay(float u, float v) const;
 };

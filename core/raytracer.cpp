@@ -76,7 +76,7 @@ Vector3 Raytracer::trace(const Ray& ray, int depth) {
     // Ambient lighting
     float ambient = 0.2f;
     
-    // SPECULAR HIGHLIGHTS - ONLY ONE VERSION!
+    // SPECULAR HIGHLIGHTS
     Vector3 viewDir = Vector3::normalize(-ray.direction);
     Vector3 reflectDir = Vector3::reflect(-lightDir, normal);
     float spec = pow(
