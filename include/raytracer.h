@@ -2,11 +2,11 @@
 #include <vector>
 #include <string>
 #include <functional>
-#include <algorithm>  // Add for std::clamp
+#include <algorithm>
 #include "triangle.h"
 #include "ray.h"
-#include "vector3.h"  // Add this
-#include "material.h"  // Add this
+#include "vector3.h"
+#include "material.h"
 
 #ifdef _WIN32
     #ifdef RAYTRACER_EXPORTS
@@ -18,7 +18,6 @@
     #define RAYTRACER_API
 #endif
 
-// Add this struct
 struct HitRecord {
     float t;
     Vector3 point;
@@ -41,10 +40,11 @@ private:
     std::vector<Triangle> triangles;
     Vector3 cameraPosition;
     
-    // Core rendering functions
-     bool intersectTriangle(const Triangle& tri, const Ray& ray, HitRecord& hit);
-    Vector3 trace(const Ray& ray, int depth = 0);
+     bool intersectTriangle(const Triangle& tri,
+                             const Ray& ray,
+                             HitRecord& hit);
+    Vector3 trace(const Ray& ray,
+                    int depth = 0);
     
-    // Scene setup
     void addDefaultScene();
 };
