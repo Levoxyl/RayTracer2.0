@@ -99,15 +99,14 @@ class MainWindow(QMainWindow):
         build_dir = Path(__file__).parent.parent / "out" / "build" / "x64-Debug"
         dll_path = build_dir / "RaytracerCore.dll"
         
-        # Verify dependencies first
         if not verify_dlls():
             return None
             
         try:
-            # Windows-specific loading
+            # Windows-specific loading 'new technology'
             if os.name == 'nt':
                 os.add_dll_directory(str(build_dir))
-                os.add_dll_directory("C:\\mingw64\\bin") #still mingw?
+                
                 
             raytracer = ctypes.CDLL(str(dll_path))
             raytracer.render_image.argtypes = [
@@ -141,7 +140,7 @@ class MainWindow(QMainWindow):
         )
         if path:
             if not path.lower().endswith('.png'):
-                path += '.png'          # safety net
+                path += '.png'
             self.output_path.setText(path)
     
     def render_image(self):
@@ -167,7 +166,7 @@ class MainWindow(QMainWindow):
         
         # Display result
         if os.path.exists(self.output_path.text()):
-            self.current_pixmap = QPixmap(self.output_path.text()) #whats pixmap?
+            self.current_pixmap = QPixmap(self.output_path.text())
             if not self.current_pixmap.isNull():
                 self.update_image_display()
             else:
@@ -176,11 +175,10 @@ class MainWindow(QMainWindow):
             print(f"Output image not found at {self.output_path.text()}")
     
     def update_image_display(self):
-        """Update image display with proper scaling""" #why the 3 double quotes?
+        """Update image display with proper scaling"""
         if not self.current_pixmap or self.current_pixmap.isNull(): 
             return 
             
-        # Get available space in scroll area
         available_width = self.scroll_area.viewport().width()
         available_height = self.scroll_area.viewport().height()
         
