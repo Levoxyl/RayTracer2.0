@@ -15,7 +15,7 @@ struct Camera {
                 fov(45.0f),
                 aspectRatio(1.33f) {}
     
-    void setProjection(float posX, float posY, float posZ, float lookX, float lookY, float lookZ);
+    void setProjection(const Vector3& pos, const Vector3& target);
 
     Ray generateRay(float u, float v) const;
 };

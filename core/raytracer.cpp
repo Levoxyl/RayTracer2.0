@@ -4,10 +4,11 @@
 #include <cmath>
 #include <limits>   
 
-void Raytracer::setCamera(float posX, float posY, float posZ, float lookX, float lookY, float lookZ) {
-    camera.setProjection(posX, posY, posZ, lookX, lookY, lookZ);
-}
+Raytracer::Raytracer(){}
 
+void Raytracer::setCamera(const Vector3& pos, const Vector3& target) {
+    camera.setProjection(pos, target);
+}
 
 void Raytracer::loadModel(const std::string& path) {
      triangles.clear();
