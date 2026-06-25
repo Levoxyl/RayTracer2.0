@@ -7,6 +7,7 @@
 #include "ray.h"
 #include "vector3.h"
 #include "material.h"
+#include <camera.h>
 
 #ifdef _WIN32
     #ifdef RAYTRACER_EXPORTS
@@ -19,6 +20,8 @@
 #endif
 
 struct HitRecord {
+    HitRecord() : t(-1.f), point(),normal(),material() {}
+
     float t;
     Vector3 point;
     Vector3 normal;
@@ -26,6 +29,17 @@ struct HitRecord {
 };
 
 class RAYTRACER_API Raytracer {
+
+
+public:
+    void setCamera(float posX, float posY, float posZ,
+        float lookX, float lookY, float lookZ);
+private:
+    Camera camera;
+
+
+
+
 public:
     Raytracer();
     

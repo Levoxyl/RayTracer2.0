@@ -1,6 +1,8 @@
 #pragma once
 #include <cmath>
 
+// Compiler's operator workings cheatsheet
+
 struct Vector3 {
     float x, y, z;
     
