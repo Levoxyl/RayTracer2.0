@@ -119,7 +119,20 @@ Vector3 Raytracer::trace(const Ray& ray, int depth) {
     }
     
     if (!hitAnything) {
-        return Vector3(0.2f, 0.3f, 0.8f); // Blue background
+        Vector3 greySky(.75f, .75f, .78f);
+        Vector3 greyGround(.85f, .85f, .85f);
+
+        float groundY = -1.5f;
+        if (ray.direction.y < .0f) {
+            float tGround = (ray.origin.y - groundY) / -ray.direction.y;
+            if (tGround > .001f) {
+                Vector3 hitPoint = ray.pointAt(tGround);
+                float pattern = (sin(hitPoint.x * 2.0f) * sin(hitPoint.z * 2.f) > .0f);
+                return greyGround * pattern;
+            }
+        }
+
+        return greySky;
     }
 
     Vector3 lightPos(2.0f, 5.0f, 3.0f);
