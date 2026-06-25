@@ -1,6 +1,11 @@
 #include "camera.h"
 #include <cmath>
 
+void Camera::setProjection(float posX, float posY, float posZ, float lookX, float lookY, float lookZ) {
+    position = Vector3(posX, posY, posZ);
+    lookAt = Vector3(lookX, lookY, lookZ);
+}
+
 Ray Camera::generateRay(float u, float v) const {
     // Calculate camera basis vectors
     Vector3 w = Vector3::normalize(position - lookAt);

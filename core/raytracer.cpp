@@ -4,9 +4,10 @@
 #include <cmath>
 #include <limits>   
 
-Raytracer::Raytracer() {
-    cameraPosition = Vector3(0.0f, 0.0f, 0.0f);
+void Raytracer::setCamera(float posX, float posY, float posZ, float lookX, float lookY, float lookZ) {
+    camera.setProjection(posX, posY, posZ, lookX, lookY, lookZ);
 }
+
 
 void Raytracer::loadModel(const std::string& path) {
      triangles.clear();
@@ -127,7 +128,7 @@ Vector3 Raytracer::trace(const Ray& ray, int depth) {
             float tGround = (ray.origin.y - groundY) / -ray.direction.y;
             if (tGround > .001f) {
                 Vector3 hitPoint = ray.pointAt(tGround);
-                float pattern = (sin(hitPoint.x * 2.0f) * sin(hitPoint.z * 2.f) > .0f);
+                float pattern = (sin(hitPoint.x * 2.0f) * sin(hitPoint.z * 2.f) > .0f) ? 1.0f : 0.8f;
                 return greyGround * pattern;
             }
         }

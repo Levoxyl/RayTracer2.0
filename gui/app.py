@@ -134,7 +134,7 @@ class MainWindow(QMainWindow):
     def select_output(self):
         path, _ = QFileDialog.getSaveFileName(
             self,
-            "Save Rendered Image",
+            "Save Rendered Image As",
             self.output_path.text(),
             "PNG Images (*.png);;All Files (*)"
         )
