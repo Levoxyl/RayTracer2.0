@@ -2,8 +2,16 @@
 #include <cmath>
 
 void Camera::setProjection(const Vector3& pos, const Vector3& target) {
-    position = pos;
-    lookAt = target;
+
+    Vector3 baseTarget(0.f, 0.f, 0.f);
+    Vector3 basePos(0.f, 1.5f, 4.f);
+
+    Vector3 fwd = Vector3::normalize(baseTarget - basePos);
+    Vector3 right = Vector3::normalize(Vector3::cross(fwd, up));
+    Vector3 trueUp = Vector3::cross(right, fwd);
+
+    position = basePos + (right * pos.x) + (trueUp * pos.y) + (fwd * (pos.z - 4.f));
+    lookAt = baseTarget + (right * pos.x) + (trueUp * pos.y);
 }
 
 Ray Camera::generateRay(float u, float v) const {
