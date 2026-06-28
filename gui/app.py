@@ -10,8 +10,6 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt
-
-# Import your safety framework
 import safetyNet
 
 class Vector3(ctypes.Structure):
@@ -26,33 +24,25 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Raytracer Workspace")
         self.setGeometry(100, 100, 1100, 700)
-
-        def closeEvent(self, event):
-            if self.raytracer_dll and self.engine_ptr:
-                self.raytracer_dll.destroy_raytracer(self.engine_ptr)
-            super().closeEvent(event)
-
-        #ptr token
-        self.raytracer_dll = self.load_dll_pipeline()
-        self.engine_ptr = None
-        if self.raytracer_dll and hasattr(self.raytracer_dll, "create_raytracer"):
-            self.engine_ptr = self.raytracer_dll.create_raytracer()
         
         self.setWindowFlag(Qt.WindowType.WindowMaximizeButtonHint, True)
         self.setWindowFlag(Qt.WindowType.WindowMinimizeButtonHint, True)
         
+        # Init props and state vars
         self.defaults = {
             "pos_x": 0.0, "pos_y": 1.5, "pos_z": 4.0,
             "look_x": 0.0, "look_y": 0.0, "look_z": 0.0
         }
-        
         self.current_pixmap = None
         self.is_updating = False
+        self.engine_ptr = None
         
-        # Load DLL using our safety asset module
-        self.raytracer = self.load_dll_pipeline()
+        # Single-pass DLL pipeline loading setup
+        self.raytracer_dll = self.load_dll_pipeline()
+        if self.raytracer_dll and hasattr(self.raytracer_dll, "create_raytracer"):
+            self.engine_ptr = self.raytracer_dll.create_raytracer()
         
-        # UI Assembly
+        # Assemble UI Elements
         main_layout = QVBoxLayout()
         
         file_layout = QHBoxLayout()
@@ -141,6 +131,13 @@ class MainWindow(QMainWindow):
         container.setLayout(main_layout)
         self.setCentralWidget(container)
 
+    # Cleaned: Extracted closeEvent method out of __init__ scope context
+    def closeEvent(self, event):
+        if self.raytracer_dll and self.engine_ptr:
+            print("🧹 Cleaning up heap memory allocation inside core DLL wrapper...")
+            self.raytracer_dll.destroy_raytracer(self.engine_ptr)
+        super().closeEvent(event)
+
     def load_dll_pipeline(self):
         build_dir = Path(__file__).parent.parent / "out" / "build" / "x64-Debug"
         dll_path = build_dir / "RaytracerCore.dll"
@@ -166,6 +163,8 @@ class MainWindow(QMainWindow):
             print(f"📦 Model path loaded: {path}")
             if self.raytracer_dll and self.engine_ptr:
                 self.raytracer_dll.load_model_to_engine(self.engine_ptr, path.encode('utf-8'))
+                # Fire an initial frame layout check upon loading geometry
+                self.trigger_render(width=200, height=150)
             
     def select_output(self):
         path, _ = QFileDialog.getSaveFileName(
@@ -177,7 +176,7 @@ class MainWindow(QMainWindow):
             self.output_path.setText(path)
 
     def on_camera_modified(self):
-        if self.is_updating or not self.model_path.text() or not self.raytracer:
+        if self.is_updating or not self.model_path.text() or not self.raytracer_dll or not self.engine_ptr:
             return
             
         self.is_updating = True
@@ -185,7 +184,7 @@ class MainWindow(QMainWindow):
         pos = Vector3(self.inputs["pos_x"].value(), self.inputs["pos_y"].value(), self.inputs["pos_z"].value())
         target = Vector3(self.inputs["look_x"].value(), self.inputs["look_y"].value(), self.inputs["look_z"].value())
         
-        if hasattr(self.raytracer_dll, "set_engine_camera") and self.engine_ptr:
+        if hasattr(self.raytracer_dll, "set_engine_camera"):
             self.raytracer_dll.set_engine_camera(self.engine_ptr, ctypes.byref(pos), ctypes.byref(target))
             
         self.trigger_render(width=200, height=150)
@@ -200,7 +199,7 @@ class MainWindow(QMainWindow):
             print("⚠️ Cannot render: Missing model path or output path setup.")
             return
             
-        if not self.raytracer:
+        if not self.raytracer_dll or not self.engine_ptr:
             print("❌ Cannot render: Raytracer DLL core engine is completely offline.")
             return
             

@@ -16,19 +16,19 @@ void save_image(const char* filename, const std::vector<float>& pixels, int w, i
 
 extern "C" {
 
-    // 1. Lifecycle: Create the persistent engine instance on the heap
+    // Create the persistent engine instance on the heap
     __declspec(dllexport) Raytracer* create_raytracer() {
         return new Raytracer();
     }
 
-    // 2. Lifecycle: Safely destroy the instance when Python exits
+    // Safely destroy the instance when Python exits
     __declspec(dllexport) void destroy_raytracer(Raytracer* r) {
         if (r != nullptr) {
             delete r;
         }
     }
 
-    // 3. Action: Load the 3D model ONCE into the persistent engine
+    // Load the 3D model x1 into the persistent engine
     __declspec(dllexport) void load_model_to_engine(Raytracer* r, const char* filepath) {
         if (r == nullptr) {
             std::cout << "❌ C++ Error: Cannot load model. Raytracer pointer is null." << std::endl;
@@ -37,7 +37,7 @@ extern "C" {
         r->loadModel(filepath);
     }
 
-    // 4. Action: Update camera vectors inside the engine without reloading geometry
+    // Update camera vectors inside the engine without reloading geometry
     __declspec(dllexport) void set_engine_camera(Raytracer* r, const Vector3* pos, const Vector3* target) {
         if (r == nullptr || pos == nullptr || target == nullptr) {
             std::cout << "❌ C++ Error: Cannot set camera. Missing pointers." << std::endl;
@@ -46,7 +46,7 @@ extern "C" {
         r->setCamera(*pos, *target);
     }
 
-    // 5. Action: Isolated render pass using whatever state currently lives in the engine
+    // Isolated render pass using whatever state currently lives in the engine
     __declspec(dllexport) void render_image(Raytracer* r,
                                             const char* output_path,
                                             int width,

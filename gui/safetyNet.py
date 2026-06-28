@@ -29,30 +29,27 @@ def verify_dlls():
         return False
 
 def configure_ctypes_signatures(raytracer, build_dir, vector3_class):
-    """Safely hooks up C++ signatures to Python types with terminal reporting"""
     try:
-        found_paths = list(build_dir.rglob("RaytracerCore.dll"))
-        if found_paths:
-           actual_dir = found_paths[0].parent
-           if os.name == 'nt':
-               os.add_dll_directory(str(actual_dir))
-            
-        raytracer.render_image.argtypes = [
-            ctypes.c_char_p, 
-            ctypes.c_char_p,
-            ctypes.c_int,
-            ctypes.c_int             
+        raytracer.create_raytracer.argtypes = []
+        raytracer.create_raytracer.restype = ctypes.c_void_p
+
+        raytracer.destroy_raytracer.argtypes = [ctypes.c_void_p]
+        raytracer.destroy_raytracer.restype = None
+
+        raytracer.load_model_to_engine.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+        raytracer.load_model_to_engine.restype = None
+
+        raytracer.set_engine_camera.argtypes = [
+            ctypes.c_void_p, 
+            ctypes.POINTER(vector3_class), 
+            ctypes.POINTER(vector3_class)
         ]
+        raytracer.set_engine_camera.restype = None
+
+        raytracer.render_image.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_int, ctypes.c_int]
+        raytracer.render_image.restype = None
         
-        if hasattr(raytracer, "setCamera"):
-            raytracer.setCamera.argtypes = [
-                ctypes.POINTER(vector3_class),
-                ctypes.POINTER(vector3_class)
-            ]
-            print("🔗 C++ setCamera linked successfully.")
-        else:
-            print("⚠️ Warning: setCamera symbol not found in DLL wrapper boundary.")
-            
+        print("🔗 All stateful C++ engine signatures linked successfully.")
         return raytracer
     except Exception as e:
         print(f"❌ Critical error mapping DLL signatures: {str(e)}")
