@@ -118,12 +118,6 @@ class MainWindow(QMainWindow):
 
             spin.setValue(default_val)
             spin.valueChanged.connect(self.on_camera_modified)
-    
-            spin.setRange(-180.0, 180.0)
-            spin.setSingleStep(1.0)
-            spin.setDecimals(2)
-            spin.setValue(default_val)
-            spin.valueChanged.connect(self.on_camera_modified)
             
             reset_btn = QPushButton("Reset")
             reset_btn.setFixedHeight(20)
