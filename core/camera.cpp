@@ -11,8 +11,8 @@ void Camera::setProjection(const Vector3& pos, const Vector3& target) {
     float yaw = pos.x * degToRad;
     float pitch = pos.y * degToRad;
 
-    if (pitch > 1.55f) pitch = 1.55f;
-    if (pitch < -1.55f) pitch = -1.55f;
+    if (pitch > 1.48f) pitch = 1.48f;
+    if (pitch < -1.48f) pitch = -1.48f;
 
     float radius = pos.z;
     if (radius < 0.1f) radius = 0.1f;
@@ -44,7 +44,7 @@ Ray Camera::generateRay(float u, float v) const {
     Vector3 v_vec = Vector3::cross(w, u_vec);
     
     // Calculate viewport dimensions
-    float halfHeight = tan(fov * 0.5f * (3.14159f / 180.0f));
+    float halfHeight = tan(fov * 0.5f * (3.14159265f / 180.0f));
     float halfWidth = aspectRatio * halfHeight;
     
     // Calculate ray direction

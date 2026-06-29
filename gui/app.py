@@ -253,6 +253,7 @@ class MainWindow(QMainWindow):
             Qt.TransformationMode.FastTransformation if self.is_updating else Qt.TransformationMode.SmoothTransformation
         )
         self.image_label.setPixmap(scaled)
+        self.image_label.setFixedSize(scaled.size())
         
     def resizeEvent(self, event):
         super().resizeEvent(event)
