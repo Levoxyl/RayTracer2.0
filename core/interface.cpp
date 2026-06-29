@@ -64,7 +64,7 @@
             r->render(width, height,
                       [&](int x, int y, float r_val, float g_val, float b_val)
                       {
-                          size_t index = (y * width + x) * 3;
+                          size_t index = (static_cast<size_t>(y) * width + x) * 3;
                           pixels[index] = r_val;
                           pixels[index + 1] = g_val;
                           pixels[index + 2] = b_val;
