@@ -242,13 +242,15 @@ class MainWindow(QMainWindow):
     def update_image_display(self):
         if not self.current_pixmap or self.current_pixmap.isNull(): 
             return 
-            
-        available_width = self.scroll_area.viewport().width()
-        available_height = self.scroll_area.viewport().height()
+
+        raw_w = self.scroll_area.viewport().width()
+        raw_h = self.scroll_area.viewport().height()
+
+        safe_w, safe_h = safetyNet.pixmap_panic(raw_w, raw_h)
         
         scaled = self.current_pixmap.scaled(
-            available_width,
-            available_height,
+            safe_h,
+            safe_w,
             Qt.AspectRatioMode.KeepAspectRatio,
             Qt.TransformationMode.FastTransformation if self.is_updating else Qt.TransformationMode.SmoothTransformation
         )

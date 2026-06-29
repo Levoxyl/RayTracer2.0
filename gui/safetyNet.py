@@ -54,3 +54,14 @@ def configure_ctypes_signatures(raytracer, build_dir, vector3_class):
     except Exception as e:
         print(f"❌ Critical error mapping DLL signatures: {str(e)}")
         return None
+
+def pixmap_panic (avalible_width, avalible_height, padding=15):
+    if avalible_width < 50 or avalible_height < 50:
+        print(f"Viewport collapsed! Dropping back to safe min template values")
+        return 200,150
+    else:
+        safe_width = avalible_width - padding
+        safe_height = avalible_height - padding
+
+        print(f"Layout validated. Original : {avalible_width}x{avalible_height} - > Guard: {safe_width}x{safe_height}")
+        return safe_width, safe_height
