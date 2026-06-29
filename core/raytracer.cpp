@@ -26,6 +26,8 @@ void Raytracer::render(int width, int height,
     std::function<void(int, int, float, float, float)>pixelCallback,
     std::function<void(float)> progressCallback) {
    
+    camera.aspectRatio = static_cast<float>(width) / static_cast<float>(height);
+
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             float u = (x + 0.5f) / width;

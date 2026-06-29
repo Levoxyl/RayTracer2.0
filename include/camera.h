@@ -12,8 +12,7 @@ struct Camera {
     Camera() : position(0.0f, 1.5f, 4.0f),
                 lookAt(0.0f, 0.0f, 0.0f),
                 up(0.0f, 1.0f, 0.0f),
-                fov(45.0f),
-                aspectRatio(1.33f) {}
+                fov(45.0f) {}
     
     void setProjection(const Vector3& pos, const Vector3& target);
 
