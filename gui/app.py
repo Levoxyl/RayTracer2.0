@@ -30,8 +30,12 @@ class MainWindow(QMainWindow):
         
         # Init props and state vars
         self.defaults = {
-            "pos_x": 0.0, "pos_y": 1.5, "pos_z": 4.0,
-            "look_x": 0.0, "look_y": 0.0, "look_z": 0.0
+            "pos_x": 0.0,    # This is Yaw Angle (Degrees: 0 to 360)
+            "pos_y": 15.0,   # This is Pitch Angle (Degrees: -85 to 85)
+            "pos_z": 20.0,   # This is Orbit Radius (Distance: Always Positive!)
+            "look_x": 0.0,   # Target Pivot Center X
+            "look_y": 0.0,   # Target Pivot Center Y
+            "look_z": 0.0    # Target Pivot Center Z
         }
         self.current_pixmap = None
         self.is_updating = False
@@ -80,26 +84,38 @@ class MainWindow(QMainWindow):
         
         self.inputs = {}
         coords = [
-            ("pos_x", "Camera X", 0, 0, self.defaults["pos_x"]),
-            ("pos_y", "Camera Y", 0, 1, self.defaults["pos_y"]),
-            ("pos_z", "Camera Z", 0, 2, self.defaults["pos_z"]),
+            ("pos_x", "Yaw (Angle)", 0, 0, self.defaults["pos_x"]),
+            ("pos_y", "Pitch (Angle)", 0, 1, self.defaults["pos_y"]),
+            ("pos_z", "Radius (Dist)", 0, 2, self.defaults["pos_z"]),
             ("look_x", "LookAt X", 1, 0, self.defaults["look_x"]),
             ("look_y", "LookAt Y", 1, 1, self.defaults["look_y"]),
             ("look_z", "LookAt Z", 1, 2, self.defaults["look_z"])
-        ]
-        
+        ]        
         for key, label_text, row, col, default_val in coords:
             cell_widget = QWidget()
             cell_layout = QVBoxLayout(cell_widget)
             cell_layout.setContentsMargins(2, 2, 2, 2)
-            
+    
             label = QLabel(label_text)
             label.setStyleSheet("font-weight: bold;")
-            
+    
             spin = QDoubleSpinBox()
-            spin.setRange(-50.0, 50.0)
-            spin.setSingleStep(0.1)
             spin.setDecimals(2)
+    
+            # Clean, isolated range rules that don't get overwritten
+            if key == "pos_z":       # Orbit Radius (Distance)
+                spin.setRange(1.0, 150.0)
+                spin.setSingleStep(1.0)
+            elif key == "pos_y":     # Pitch Angle (Look Up/Down)
+                spin.setRange(-85.0, 85.0)
+                spin.setSingleStep(1.0)
+            elif key == "pos_x":     # Yaw Angle (Spin Around 360 Entirely!)
+                spin.setRange(-360.0, 360.0)
+                spin.setSingleStep(5.0)
+            else:                    # LookAt targets (Panning the Center Point)
+                spin.setRange(-100.0, 100.0)
+                spin.setSingleStep(0.5)
+
             spin.setValue(default_val)
             spin.valueChanged.connect(self.on_camera_modified)
             
@@ -226,17 +242,20 @@ class MainWindow(QMainWindow):
     def update_image_display(self):
         if not self.current_pixmap or self.current_pixmap.isNull(): 
             return 
-            
-        available_width = self.scroll_area.viewport().width()
-        available_height = self.scroll_area.viewport().height()
+
+        raw_w = self.scroll_area.viewport().width()
+        raw_h = self.scroll_area.viewport().height()
+
+        safe_w, safe_h = safetyNet.pixmap_panic(raw_w, raw_h)
         
         scaled = self.current_pixmap.scaled(
-            available_width,
-            available_height,
+            safe_h,
+            safe_w,
             Qt.AspectRatioMode.KeepAspectRatio,
             Qt.TransformationMode.FastTransformation if self.is_updating else Qt.TransformationMode.SmoothTransformation
         )
         self.image_label.setPixmap(scaled)
+        self.image_label.setFixedSize(scaled.size())
         
     def resizeEvent(self, event):
         super().resizeEvent(event)

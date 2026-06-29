@@ -19,3 +19,11 @@ add_library(RaytracerCore SHARED
 )
 
 target_compile_definitions(RaytracerCore PRIVATE RAYTRACER_EXPORTS)
+
+# Explicitly force MSVC to use the Dynamic C/C++ Runtime compiler switches
+if(MSVC)
+    target_compile_options(RaytracerCore PRIVATE
+        $<$<CONFIG:Debug>:/MDd>
+        $<$<NOT:$<CONFIG:Debug>>:/MD>
+    )
+endif()

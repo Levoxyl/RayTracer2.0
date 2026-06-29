@@ -26,6 +26,8 @@ void Raytracer::render(int width, int height,
     std::function<void(int, int, float, float, float)>pixelCallback,
     std::function<void(float)> progressCallback) {
    
+    camera.aspectRatio = static_cast<float>(width) / static_cast<float>(height);
+
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             float u = (x + 0.5f) / width;
@@ -89,18 +91,18 @@ bool Raytracer::intersectTriangle(const Triangle& tri,
 void Raytracer::addDefaultScene() {
     triangles.clear();
 
-    Material testMat;
-    testMat.albedo = Vector3(0.8f, .2f, .2f);
-    testMat.specular = .5f;
-    testMat.shininess = 32.0f;
+    Material markerMat;
+    markerMat.albedo = Vector3(1.f, 0.f, 0.f);
+    markerMat.specular = .0f;
+    markerMat.shininess = 1.0f;
 
-    Vector3 vertex0(-1.0f, -.5f, 0.0f);
-    Vector3 vertex1(1.f, -.5f, .0f);
-    Vector3 vertex2(.0f, 1.f, .0f);
+    Vector3 c1(-1.0f, -.0f, 0.0f);
+    Vector3 c2(.1f, 0.0f, .0f);
+    Vector3 c3(.0f, .2f, .0f);
 
-    Triangle testTriangle(vertex0, vertex1, vertex2, testMat);
+    Triangle centerMarker(c1, c2, c3, markerMat);
 
-    triangles.push_back(testTriangle);
+    triangles.push_back(centerMarker);
 
 }
 
@@ -129,11 +131,16 @@ Vector3 Raytracer::trace(const Ray& ray, int depth) {
             float tGround = (ray.origin.y - groundY) / -ray.direction.y;
             if (tGround > .001f) {
                 Vector3 hitPoint = ray.pointAt(tGround);
+
+                float thickness = 0.4f;
+                if (std::abs(hitPoint.x) < thickness || std::abs(hitPoint.z) < thickness) {
+                    return Vector3(.9f, .2f, .2f);
+                }
+
                 float pattern = (sin(hitPoint.x * 2.0f) * sin(hitPoint.z * 2.f) > .0f) ? 1.0f : 0.8f;
                 return greyGround * pattern;
             }
         }
-
         return greySky;
     }
 
