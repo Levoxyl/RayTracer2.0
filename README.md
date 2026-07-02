@@ -90,18 +90,7 @@ cmake .. -DCMAKE_BUILD_TYPE=Debug
 
 ## Troubleshooting
 ### Common Issues
-1. **Missing DLL errors**:
-   - Copy these from MinGW bin to build directory:
-     - `libgcc_s_seh-1.dll`
-     - `libstdc++-6.dll`
-     - `libwinpthread-1.dll`
 
-2. **vcpkg integration issues**:
-   ```powershell
-   .\vcpkg\vcpkg integrate remove
-   .\vcpkg\vcpkg integrate install
-   ```
-
-3. **Python GUI not loading DLL**:
+1. **Python GUI not loading DLL**:
    - Verify DLL path in `gui/app.py`
    - Check architecture matches (64-bit Python for 64-bit build)
