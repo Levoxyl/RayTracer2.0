@@ -1,7 +1,3 @@
-# Intro
-This will be the more complex version of the raytracing project.
-The software is made in VSCode with c++ 20.
-Development continues
 
 # Features
 - Real-time ray tracing engine
